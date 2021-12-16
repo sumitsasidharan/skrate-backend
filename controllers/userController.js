@@ -30,8 +30,51 @@ const getAllUsers = async (req, res) => {
 };
 
 // Update Username - (UPDATE)
+const updateUser = async (req, res) => {
+   // check if userID in req.params and req.body is the same.
+   if (req.params.userId !== req.body.id) {
+      return res.status(500).json('You are not authorised');
+   }
+
+   try {
+      const user = await User.findByIdAndUpdate(
+         req.params.userId,
+         {
+            username: req.body.username,
+         },
+         { new: true }
+      );
+      res.status(200).json({
+         status: 'success',
+         user,
+      });
+   } catch (err) {
+      console.log(err.message);
+      res.status(500).json(err.message);
+   }
+};
 
 // Delete User - (DELETE)
+const deleteUser = async (req, res) => {
+   if (req.params.userId !== req.body.id) {
+      return res.status(500).json('You are not authorised');
+   }
+
+   try {
+      const user = await User.findByIdAndDelete(req.params.userId);
+
+      if (!user) {
+         res.status(404).json('User Not Found');
+      } else {
+         res.status(200).json('User deleted successfully!');
+      }
+   } catch (err) {
+      console.log(err.message);
+      res.status(500).json(err.message);
+   }
+};
 
 exports.register = register;
 exports.getAllUsers = getAllUsers;
+exports.updateUser = updateUser;
+exports.deleteUser = deleteUser;
