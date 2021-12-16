@@ -14,6 +14,12 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/meetings', meetingRouter);
 
+app.use('/', (req, res) => {
+   res.send(
+      "Visit <a href='https://github.com/sumitsasidharan/skrate-backend'>Github Link</a> for API endpoints & other details "
+   );
+});
+
 // Database & Server
 const DB_URL = process.env.MONGO_URI;
 const port = process.env.PORT || 5000;
