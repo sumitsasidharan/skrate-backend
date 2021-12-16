@@ -28,8 +28,47 @@ const getAllMeetings = async (req, res) => {
       res.status(200).json({
          status: 'success',
          results: allMeetings.length,
-         meetings_list: allMeetings,
+         meeting_list: allMeetings,
       });
+   } catch (err) {
+      console.log(err.message);
+      res.status(500).json(err.message);
+   }
+};
+
+// Update meeting - (UPDATE)
+const updateMeeting = async (req, res) => {
+   try {
+      const meeting = await Meeting.findByIdAndUpdate(
+         req.params.meetingId,
+         req.body,
+         { new: true }
+      );
+
+      if (!meeting) {
+         res.status(404).json('Incorrect Meeting ID');
+      } else {
+         res.status(200).json({
+            status: 'success',
+            meeting,
+         });
+      }
+   } catch (err) {
+      console.log(err.message);
+      res.status(500).json(err.message);
+   }
+};
+
+// delete meeting - (DELETE)
+const deleteMeeting = async (req, res) => {
+   try {
+      const meeting = await Meeting.findByIdAndDelete(req.params.meetingId);
+
+      if (!meeting) {
+         res.status(404).json('Incorrect Meeting ID');
+      } else {
+         res.status(200).json('Meeting deleted successfully!');
+      }
    } catch (err) {
       console.log(err.message);
       res.status(500).json(err.message);
@@ -38,9 +77,5 @@ const getAllMeetings = async (req, res) => {
 
 exports.createMeeting = createMeeting;
 exports.getAllMeetings = getAllMeetings;
-
-// try {
-// } catch (err) {
-//    console.log(err.message);
-//    res.status(500).json(err.message);
-// }
+exports.updateMeeting = updateMeeting;
+exports.deleteMeeting = deleteMeeting;
